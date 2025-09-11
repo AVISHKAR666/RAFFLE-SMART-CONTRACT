@@ -15,14 +15,14 @@ contract DeployRaffle is Script {
         HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
 
         vm.startBroadcast();
-        Raffle raffle = new Rffle(
+        Raffle raffle = new Raffle(
             config.entranceFee,
             config.interval,
             config.vrfCoordinator,
             config.gasLane,
             config.subscriptionId,
             config.callbackGasLimit
-        )
+        );
         vm.stopBroadcast();
         return(raffle, helperConfig);
     } 
