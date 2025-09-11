@@ -36,22 +36,20 @@ import {IVRFCoordinatorV2Plus} from "@chainlink/contracts/src/v0.8/vrf/dev/inter
  * @notice this contract is for creating a sample raffle
  * @dev Implements chainlink VRFv2.5
  * @dev the duration of the lottery in seconds
-
  */
-
 contract Raffle is VRFConsumerBaseV2Plus {
-
     /* ERRORS */
     error Raffle__NotEnoughEthSentToEnterIntoRaffle();
     error Raffle__RewardTransferToWinnerFailed();
     error Raffle__RaffleNotOpen();
     error Raffle__UpkeepNotNeeded(uint256 balance, uint256 playersLength, uint256 raffleState);
 
-    /* TYPE DECLARATION */ 
+    /* TYPE DECLARATION */
     enum RaffleState {
         OPEN, // 0
         CALCULATING // 1
-        //another_state // 2
+            //another_state // 2
+
     }
 
     /* STATE VARIABLES */
@@ -60,27 +58,26 @@ contract Raffle is VRFConsumerBaseV2Plus {
     uint256 private immutable i_entranceFee;
     uint256 private immutable i_interval;
     bytes32 private immutable i_gasLane;
-    uint256 private immutable i_subscriptionId; 
+    uint256 private immutable i_subscriptionId;
     uint32 private immutable i_callbackGasLimit;
     address payable[] private s_players;
     uint256 private s_startedTimeStamp;
     address private s_recentWinnerAddress;
     RaffleState private s_raffleState;
-    
-    
+
     /* EVENTS */
     // when player enters the raffle
     event RaffleEntered(address indexed player);
-    event WinnerPicked (address indexed winner);
+    event WinnerPicked(address indexed winner);
 
     /* CONSTRUCTOR */
     constructor(
-        uint256 entranceFee, 
-        uint256 interval, 
+        uint256 entranceFee,
+        uint256 interval,
         address vrfCoordinator,
-        bytes32 gasLane, 
-        uint256 subscriptionId,        
-        uint32 callbackGasLimit 
+        bytes32 gasLane,
+        uint256 subscriptionId,
+        uint32 callbackGasLimit
     ) VRFConsumerBaseV2Plus(vrfCoordinator) {
         i_entranceFee = entranceFee;
         i_interval = interval;
@@ -91,12 +88,11 @@ contract Raffle is VRFConsumerBaseV2Plus {
         s_raffleState = RaffleState.OPEN;
     }
 
-
     /* FUNCTIONS */
     // to enter into the raffle
     function enterRaffle() external payable {
         // checking raffle state is open or not
-        if(s_raffleState != RaffleState.OPEN) revert Raffle__RaffleNotOpen();
+        if (s_raffleState != RaffleState.OPEN) revert Raffle__RaffleNotOpen();
         // acc to new update we can write custom errors inside "require" condition...like this
         //require(msg.value < i_entranceFee, NotEnoughEthToEnterIntoRaffle());
         // but still hypothetically "if" condition is more gas efficient than "require"
@@ -116,16 +112,15 @@ contract Raffle is VRFConsumerBaseV2Plus {
      * 2. The lottery is open
      * 3. The contracts has ETH
      * 4. The raffle has players
-     * 5. Implicitly your subscription has LINK 
+     * 5. Implicitly your subscription has LINK
      * @param - ignored
      * @return upkeepNeeded - true true if it's time to restart the lottery
      * @return - ignored
      */
-
-    function checkUpkeep(bytes memory /*checData*/) 
-    public 
-    view 
-    returns(bool upkeepNeeded, bytes memory /*performDataa*/)
+    function checkUpkeep(bytes memory /*checData*/ )
+        public
+        view
+        returns (bool upkeepNeeded, bytes memory /*performDataa*/ )
     {
         bool timeHasPassed = (block.timestamp - s_startedTimeStamp >= i_interval);
         bool isRaffleOpen = (s_raffleState == RaffleState.OPEN);
@@ -135,23 +130,22 @@ contract Raffle is VRFConsumerBaseV2Plus {
         return (upkeepNeeded, "");
     }
 
-
     // to pick the winner randomly - 3 step process
     // 3. be automatically called...when there is a time to pick a winner
-    function performUpkeep(bytes calldata /*performData*/) external {
+    function performUpkeep(bytes calldata /*performData*/ ) external {
         // check to see if enough time has passed
         (bool upkeepNeeded,) = checkUpkeep("");
         // If upkeepNeeded == true → !true == false → if(false) → ❌ the revert won’t run. -->  performUpkeep will run
         // If upkeepNeeded == false → !false == true → if(true) → ✅ the revert will run. --> performUpkeep won't run
-        if(!upkeepNeeded){
+        if (!upkeepNeeded) {
             revert Raffle__UpkeepNotNeeded(address(this).balance, s_players.length, uint256(s_raffleState));
         }
-        
+
         s_raffleState = RaffleState.CALCULATING;
         // 1. get a random number
         // generating a random number from chainlink VRF 2.5
 
-        VRFV2PlusClient.RandomWordsRequest memory request = VRFV2PlusClient.RandomWordsRequest ({
+        VRFV2PlusClient.RandomWordsRequest memory request = VRFV2PlusClient.RandomWordsRequest({
             gasLane: i_gasLane,
             subId: i_subscriptionId,
             requestConfirmations: REQUEST_CONFIRMATIONS,
@@ -164,31 +158,30 @@ contract Raffle is VRFConsumerBaseV2Plus {
         });
 
         // uint256 requestId = s_vrfCoordinator.requestRandomWords(request);
-        // here is the random num generated by chainlink node 
+        // here is the random num generated by chainlink node
         // uint256 requestId = coordinator.requestRandomWords(request);
 
         IVRFCoordinatorV2Plus coordinator = IVRFCoordinatorV2Plus(address(s_vrfCoordinator));
-        coordinator.requestRandomWords (request);
+        coordinator.requestRandomWords(request);
 
-    //    IVRFCoordinatorV2Plus coordinator = IVRFCoordinatorV2Plus(address(s_vrfCoordinator));
-    //     coordinator.requestRandomWords(
-    //         VRFV2PlusClient.RandomWordsRequest({
-    //             gasLane: i_gasLane,
-    //             subId: i_subscriptionId,
-    //             requestConfirmations: REQUEST_CONFIRMATIONS,
-    //             callbackGasLimit: i_callbackGasLimit,
-    //             numWords: NUM_WORDS,
-    //             extraArgs: VRFV2PlusClient._argsToBytes(
-    //                 VRFV2PlusClient.ExtraArgsV1({nativePayment: false})
-    //             )
-    //         })
-    //     );
+        //    IVRFCoordinatorV2Plus coordinator = IVRFCoordinatorV2Plus(address(s_vrfCoordinator));
+        //     coordinator.requestRandomWords(
+        //         VRFV2PlusClient.RandomWordsRequest({
+        //             gasLane: i_gasLane,
+        //             subId: i_subscriptionId,
+        //             requestConfirmations: REQUEST_CONFIRMATIONS,
+        //             callbackGasLimit: i_callbackGasLimit,
+        //             numWords: NUM_WORDS,
+        //             extraArgs: VRFV2PlusClient._argsToBytes(
+        //                 VRFV2PlusClient.ExtraArgsV1({nativePayment: false})
+        //             )
+        //         })
+        //     );
     }
-    
 
     // 2. use a random number to select a player randomly
     // to get back this generated random num we use "fulfillRandomWords" function
-    function fulfillRandomWords(uint256 /*requestId*/ ,uint256[] calldata randomWords) internal override {
+    function fulfillRandomWords(uint256, /*requestId*/ uint256[] calldata randomWords) internal override {
         // CHECKS
         // checks include require/conditional statements
 
@@ -196,31 +189,29 @@ contract Raffle is VRFConsumerBaseV2Plus {
         uint256 indexOfWinner = randomWords[0] % s_players.length;
         address recentWinnerAddress = s_players[indexOfWinner];
         s_recentWinnerAddress = recentWinnerAddress;
-        // emitting an event 
+        // emitting an event
         emit WinnerPicked(s_recentWinnerAddress);
         // also resetting the started timestamp
         s_startedTimeStamp = block.timestamp;
-        // again resetting an array for next raffle 
+        // again resetting an array for next raffle
         s_players = new address payable[](0);
-        // again opening raffle for next raffle 
+        // again opening raffle for next raffle
         s_raffleState = RaffleState.OPEN;
-    
+
         // INTERACTIONS(external contract interactions)
         // external calls should be in the last always, to reduce the attack surface
-        (bool success, ) = s_recentWinnerAddress.call{value: address(this).balance}("");
-        if(!success) revert Raffle__RewardTransferToWinnerFailed();
+        (bool success,) = s_recentWinnerAddress.call{value: address(this).balance}("");
+        if (!success) revert Raffle__RewardTransferToWinnerFailed();
     }
-    
 
     /* GETTER Functions */
     // getting entrance fee
-    function getEntranceFee() external view returns(uint256) {
+    function getEntranceFee() external view returns (uint256) {
         return i_entranceFee;
     }
 
     // getting recent winner address
-    function getRecentWinnerAddress() external view returns(address) {
+    function getRecentWinnerAddress() external view returns (address) {
         return s_recentWinnerAddress;
     }
-
 }
