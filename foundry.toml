@@ -11,5 +11,5 @@ remappings = [
 
 
 
-# [fmt]
-# ignore = ["script/*"]
+[fmt]
+ignore = ["script/*"]
