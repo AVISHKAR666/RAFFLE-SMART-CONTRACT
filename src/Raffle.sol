@@ -57,7 +57,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     uint32 private constant NUM_WORDS = 1;
     uint256 private immutable i_entranceFee;
     uint256 private immutable i_interval;
-    bytes32 private immutable i_gasLane;
+    bytes32 private immutable i_keyHash;
     uint256 private immutable i_subscriptionId;
     uint32 private immutable i_callbackGasLimit;
     address payable[] private s_players;
@@ -75,13 +75,13 @@ contract Raffle is VRFConsumerBaseV2Plus {
         uint256 entranceFee,
         uint256 interval,
         address vrfCoordinator,
-        bytes32 gasLane,
+        bytes32 keyHash,
         uint256 subscriptionId,
         uint32 callbackGasLimit
     ) VRFConsumerBaseV2Plus(vrfCoordinator) {
         i_entranceFee = entranceFee;
         i_interval = interval;
-        i_gasLane = gasLane;
+        i_keyHash = keyHash;
         i_subscriptionId = subscriptionId;
         i_callbackGasLimit = callbackGasLimit;
         s_startedTimeStamp = block.timestamp;
@@ -146,7 +146,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         // generating a random number from chainlink VRF 2.5
 
         VRFV2PlusClient.RandomWordsRequest memory request = VRFV2PlusClient.RandomWordsRequest({
-            gasLane: i_gasLane,
+            keyHash: i_keyHash,
             subId: i_subscriptionId,
             requestConfirmations: REQUEST_CONFIRMATIONS,
             callbackGasLimit: i_callbackGasLimit,

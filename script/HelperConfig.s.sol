@@ -24,7 +24,7 @@ contract HelperConfig is CodeConstants, Script {
         uint256 entranceFee; 
         uint256 interval;
         address vrfCoordinator;
-        bytes32 gasLane;
+        bytes32 keyHash;
         uint256 subscriptionId;        
         uint32 callbackGasLimit; 
     }
@@ -62,7 +62,7 @@ contract HelperConfig is CodeConstants, Script {
             entranceFee: 0.01 ether, //1e16
             interval:30, //30 sec
             vrfCoordinator: 0x8103B0A8A00be2DDC778e6e7eaa21791Cd364625,
-            gasLane: 0x474e34a077df58807dbe9c96e02e3f8f07c3c7d7b3e1a37e2319d0c7d6c12d6b,
+            keyHash: 0x474e34a077df58807dbe9c96e02e3f8f07c3c7d7b3e1a37e2319d0c7d6c12d6b,
             callbackGasLimit: 500000,
             subscriptionId: 0 //have to fix this
         });
@@ -85,7 +85,7 @@ contract HelperConfig is CodeConstants, Script {
             interval:30, //30 sec
             vrfCoordinator: address(vrfCoordinatorV2_5Mock),
             // gaslane doesn't matter because it's just a mock man
-            gasLane: 0x474e34a077df58807dbe9c96e02e3f8f07c3c7d7b3e1a37e2319d0c7d6c12d6b,
+            keyHash: 0x474e34a077df58807dbe9c96e02e3f8f07c3c7d7b3e1a37e2319d0c7d6c12d6b,
             callbackGasLimit: 500000,
             subscriptionId: 0 //might have to fix this
         });
