@@ -196,7 +196,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         return s_recentWinnerAddress;
     }
 
-    // getting starting state of raffle 
+    // getting starting state of 
     function getRaffleState() external view returns(RaffleState) {
         return s_raffleState;
     }
