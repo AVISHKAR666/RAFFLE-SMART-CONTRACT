@@ -2,12 +2,11 @@
 pragma solidity 0.8.19;
 
 import {Test} from "forge-std/Test.sol";
-import  {Raffle} from "../../src/Raffle.sol";
+import {Raffle} from "../../src/Raffle.sol";
 import {DeployRaffle} from "../../script/DeployRaffle.s.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
 
 contract RaffleTest is Test {
-
     Raffle public raffle;
     HelperConfig public helperConfig;
 
@@ -25,9 +24,9 @@ contract RaffleTest is Test {
         DeployRaffle deployer = new DeployRaffle();
         (raffle, helperConfig) = deployer.deployRaffleContract();
         HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
-        entranceFee = config.entranceFee;  
+        entranceFee = config.entranceFee;
         interval = config.interval;
-        vrfCoordinator = config.vrfCoordinator;    
+        vrfCoordinator = config.vrfCoordinator;
         keyHash = config.keyHash;
         subscriptionId = config.subscriptionId;
         callbackGasLimit = config.callbackGasLimit;
@@ -45,7 +44,7 @@ contract RaffleTest is Test {
         vm.prank(PLAYER);
         // Act/assert
         vm.expectRevert(Raffle.Raffle__NotEnoughEthSentToEnterIntoRaffle.selector);
-        raffle.enterRaffle(); 
+        raffle.enterRaffle();
         //calling "enterRaffle" fun without sending an eth
         //so the raffle contract will revert with error "Raffle__NotEnoughEthSentToEnterIntoRaffle"
         // vm.expectRevert(...) is waiting for that revert.
@@ -58,9 +57,7 @@ contract RaffleTest is Test {
         // Act
         raffle.enterRaffle{value: entranceFee}();
         // Assert
-        address playerRecorded = raffle.getPlayer(0); 
+        address playerRecorded = raffle.getPlayer(0);
         assert(playerRecorded == PLAYER);
     }
-
-
 }

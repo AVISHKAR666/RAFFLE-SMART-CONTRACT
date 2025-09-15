@@ -164,8 +164,8 @@ contract Raffle is VRFConsumerBaseV2Plus {
     // 2. use a random number to select a player randomly
     // to get back this generated random num we use "fulfillRandomWords" function
     function fulfillRandomWords(uint256, /*requestId*/ uint256[] calldata randomWords) internal override {
-        // CHECKS - include require/conditional statements 
-        
+        // CHECKS - include require/conditional statements
+
         // EFFECTS (internal contract state changes)
         uint256 indexOfWinner = randomWords[0] % s_players.length;
         address recentWinnerAddress = s_players[indexOfWinner];
@@ -196,12 +196,12 @@ contract Raffle is VRFConsumerBaseV2Plus {
         return s_recentWinnerAddress;
     }
 
-    // getting starting state of 
-    function getRaffleState() external view returns(RaffleState) {
+    // getting starting state of
+    function getRaffleState() external view returns (RaffleState) {
         return s_raffleState;
     }
 
-    function getPlayer(uint256 indexOfPlayer) external view returns(address){
+    function getPlayer(uint256 indexOfPlayer) external view returns (address) {
         return s_players[indexOfPlayer];
     }
 }
