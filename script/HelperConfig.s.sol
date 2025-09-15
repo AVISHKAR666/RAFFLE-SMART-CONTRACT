@@ -21,17 +21,18 @@ contract HelperConfig is CodeConstants, Script {
 
     // key settings needed for Raffle.
     struct NetworkConfig{
-        uint256 entranceFee; 
+        uint256 entranceFee;
         uint256 interval;
         address vrfCoordinator;
         bytes32 keyHash;
-        uint256 subscriptionId;        
-        uint32 callbackGasLimit; 
+        uint256 subscriptionId;
+        uint32 callbackGasLimit;
     }
 
     // localNetworkConfig - stores config for your Anvil local chain
     NetworkConfig public localNetworkConfig;
     
+    // networkConfigs - store config for testnests like sepolia chain
     mapping(uint256 chainId => NetworkConfig) public networkConfigs;
 
     constructor() {
@@ -84,12 +85,11 @@ contract HelperConfig is CodeConstants, Script {
             entranceFee: 0.01 ether, //1e16
             interval:30, //30 sec
             vrfCoordinator: address(vrfCoordinatorV2_5Mock),
-            // gaslane doesn't matter because it's just a mock man
+            // keyHash/gasLane doesn't matter because it's just a mock man
             keyHash: 0x474e34a077df58807dbe9c96e02e3f8f07c3c7d7b3e1a37e2319d0c7d6c12d6b,
             callbackGasLimit: 500000,
             subscriptionId: 0 //might have to fix this
         });
         return localNetworkConfig;
-
     }
 }
