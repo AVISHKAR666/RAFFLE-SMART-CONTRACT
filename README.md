@@ -18,15 +18,6 @@ Key features include:
 
 ✅ Comprehensive unit testing with Foundry
 
-⚙️ Features
-
-Minimum Entry Fee --> Players must send a minimum ETH amount to enter.
-Track Participants --> Players are stored in a dynamic array and can be queried.
-Verifiable Randomness -->	Winner selection uses Chainlink VRF v2.5 for tamper-proof randomness.
-Automated Draw -->	Winners are picked automatically after the raffle interval.
-Events -->	Emits RaffleEntered and WinnerPicked for easy tracking on-chain.
-Tests -->	Unit tests for all core functionalities using Foundry.
-
 
 🛠 Tech Stack
 
