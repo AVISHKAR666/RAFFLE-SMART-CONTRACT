@@ -1,66 +1,109 @@
-## Foundry
+🎰 Raffle Smart Contract
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A decentralized lottery (raffle) smart contract built with Solidity, using Chainlink VRF v2.5 for verifiable randomness and Foundry for testing and deployment.
 
-Foundry consists of:
+📝 Project Overview
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+This project implements a secure and decentralized raffle contract where users can participate by sending ETH. At specified intervals, a random winner is selected automatically using Chainlink VRF to ensure fairness.
 
-## Documentation
+Key features include:
 
-https://book.getfoundry.sh/
+✅ Minimum entrance fee requirement
 
-## Usage
+✅ Storing participants and tracking entries
 
-### Build
+✅ Verifiable randomness using Chainlink VRF v2.5
 
-```shell
-$ forge build
-```
+✅ Automated winner selection
 
-### Test
+✅ Comprehensive unit testing with Foundry
 
-```shell
-$ forge test
-```
+⚙️ Features
 
-### Format
+Minimum Entry Fee --> Players must send a minimum ETH amount to enter.
+Track Participants --> Players are stored in a dynamic array and can be queried.
+Verifiable Randomness -->	Winner selection uses Chainlink VRF v2.5 for tamper-proof randomness.
+Automated Draw -->	Winners are picked automatically after the raffle interval.
+Events -->	Emits RaffleEntered and WinnerPicked for easy tracking on-chain.
+Tests -->	Unit tests for all core functionalities using Foundry.
 
-```shell
-$ forge fmt
-```
 
-### Gas Snapshots
+🛠 Tech Stack
 
-```shell
-$ forge snapshot
-```
+Solidity 0.8.19 – Smart contract programming
 
-### Anvil
+Chainlink VRF v2.5 – Random number generator
 
-```shell
-$ anvil
-```
+Foundry – Smart contract testing & deployment
 
-### Deploy
+EVM Compatible Networks – Sepolia, Goerli, etc.
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+Forge Std – Testing utilities (vm.prank, vm.deal, vm.hoax)
 
-### Cast
 
-```shell
-$ cast <subcommand>
-```
+📂 File Structure
+├── src/
+│   └── Raffle.sol             # Main raffle contract
+├── script/
+│   ├── DeployRaffle.s.sol     # Deployment script
+│   └── HelperConfig.s.sol     # Network configuration
+├── test/
+│   └── unit/
+│       └── RaffleTest.t.sol   # Unit tests
+├── lib/
+│   └── chainlink-brownie-contracts
+└── README.md
 
-### Help
+⚡ How it Works
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+Players send ETH via enterRaffle() to participate.
+
+The contract keeps track of participants in s_players.
+
+After the raffle interval passes, Chainlink VRF is called in performUpkeep() to generate a random number.
+
+A winner is selected using modulo arithmetic:
+
+uint256 indexOfWinner = randomWords[0] % s_players.length;
+
+Winner receives the accumulated ETH, and the raffle resets.
+
+
+🧪 Running Tests
+
+Run unit tests:
+
+forge test
+
+
+Tests include:
+
+Raffle opens correctly
+
+Reverts if player sends insufficient ETH
+
+Player entries are recorded
+
+Winner selection and payout
+
+🚀 Deployment
+
+Deploy on any EVM-compatible network:
+
+forge script script/DeployRaffle.s.sol --broadcast --rpc-url <RPC_URL> --private-key <PRIVATE_KEY>
+
+🔧 Cheatcodes in Tests
+
+vm.prank(address) – sets msg.sender for the next call
+
+vm.deal(address, amount) – sets ETH balance
+
+vm.hoax(address, amount) – combines prank + deal
+
+📌 Notes
+
+This contract uses custom errors for gas efficiency.
+
+Events are emitted for all player entries and winner selections.
+
+Chainlink VRF integration ensures fairness and transparency.
