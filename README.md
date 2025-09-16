@@ -32,18 +32,6 @@ EVM Compatible Networks – Sepolia, Goerli, etc.
 Forge Std – Testing utilities (vm.prank, vm.deal, vm.hoax)
 
 
-📂 File Structure
-├── src/
-│   └── Raffle.sol             # Main raffle contract
-├── script/
-│   ├── DeployRaffle.s.sol     # Deployment script
-│   └── HelperConfig.s.sol     # Network configuration
-├── test/
-│   └── unit/
-│       └── RaffleTest.t.sol   # Unit tests
-├── lib/
-│   └── chainlink-brownie-contracts
-└── README.md
 
 ⚡ How it Works
 
@@ -60,22 +48,7 @@ uint256 indexOfWinner = randomWords[0] % s_players.length;
 Winner receives the accumulated ETH, and the raffle resets.
 
 
-🧪 Running Tests
 
-Run unit tests:
-
-forge test
-
-
-Tests include:
-
-Raffle opens correctly
-
-Reverts if player sends insufficient ETH
-
-Player entries are recorded
-
-Winner selection and payout
 
 🚀 Deployment
 
