@@ -37,7 +37,6 @@ import {IVRFCoordinatorV2Plus} from "@chainlink/contracts/src/v0.8/vrf/dev/inter
  * @dev Implements chainlink VRFv2.5
  * @dev the duration of the lottery in seconds
  */
-
 contract Raffle is VRFConsumerBaseV2Plus {
     /* ERRORS */
     error Raffle__NotEnoughEthSentToEnterIntoRaffle();
@@ -50,6 +49,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         OPEN, // 0
         CALCULATING // 1
             //another_state // 2
+
     }
 
     /* STATE VARIABLES */
@@ -114,7 +114,11 @@ contract Raffle is VRFConsumerBaseV2Plus {
      * @return upkeepNeeded - true true if it's time to restart the lottery
      * @return - ignored
      */
-    function checkUpkeep(bytes memory /*checData*/ ) public view returns (bool upkeepNeeded, bytes memory /*performDataa*/ ) {
+    function checkUpkeep(bytes memory /*checData*/ )
+        public
+        view
+        returns (bool upkeepNeeded, bytes memory /*performDataa*/ )
+    {
         bool timeHasPassed = (block.timestamp - s_startedTimeStamp >= i_interval);
         bool isRaffleOpen = (s_raffleState == RaffleState.OPEN);
         bool hasBalance = (address(this).balance > 0);
