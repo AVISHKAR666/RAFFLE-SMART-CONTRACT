@@ -1,4 +1,4 @@
-name: CI
+name: Foundry CI
 
 on:
   push:
@@ -9,32 +9,37 @@ env:
   FOUNDRY_PROFILE: ci
 
 jobs:
-  check:
-    name: Foundry project
+  build-and-test:
+    name: Build & Test Raffle Smart Contract
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      # Step 1: Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
+      # Step 2: Install Foundry toolchain
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
+      # Step 3: Show Forge version
       - name: Show Forge version
-        run: |
-          forge --version
+        run: forge --version
 
-      - name: Run Forge fmt
-        run: |
-          forge fmt --check
-        id: fmt
+      # Step 4: Install project dependencies
+      - name: Install Forge dependencies
+        run: forge install
 
-      - name: Run Forge build
-        run: |
-          forge build --sizes
-        id: build
+      # Step 5: Run code formatter check
+      - name: Check formatting
+        run: forge fmt --check
 
-      - name: Run Forge tests
-        run: |
-          forge test -vvv
-        id: test
+      # Step 6: Build contracts and show sizes
+      - name: Build contracts
+        run: forge build --sizes
+
+      # Step 7: Run all tests
+      - name: Run tests
+        run: forge test -vvv
