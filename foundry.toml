@@ -7,9 +7,7 @@ libs = ["lib"]
 
 remappings = [
   '@chainlink/contracts/=lib/chainlink-brownie-contracts/contracts/',
+  
 ]
-
-
-
 [fmt]
 ignore = ["script/*"]
