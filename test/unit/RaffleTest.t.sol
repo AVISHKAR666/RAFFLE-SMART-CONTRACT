@@ -19,6 +19,10 @@ contract RaffleTest is Test {
 
     address public PLAYER = makeAddr("player");
     uint256 public constant STARTING_PLAYER_BALANCE = 10 ether;
+    
+    // to test the event
+    event RaffleEntered(address indexed player);
+    event WinnerPicked(address indexed winner);
 
     function setUp() public {
         DeployRaffle deployer = new DeployRaffle();
@@ -58,6 +62,36 @@ contract RaffleTest is Test {
         raffle.enterRaffle{value: entranceFee}();
         // Assert
         address playerRecorded = raffle.getPlayer(0);
-        assert(playerRecorded == PLAYER);
+        // assert(playerRecorded == PLAYER);
+        //assert comes from solidity directly, low-level 
+        assertEq(playerRecorded , PLAYER); 
+        // req more gas than "assert" becoz it comes from lib/forge-std/Test
+        // it logs both value if error comes
+    }
+
+    function testEnteringRaffleEmitsEvent() public {
+        // Arrange
+        vm.prank(PLAYER);
+        // Act
+        vm.expectEmit(true, false, false, false, address(raffle));
+        emit RaffleEntered(PLAYER);
+        // Assert
+        raffle.enterRaffle{value: entranceFee}();
+    }
+
+    function testDontAllowPlayersToEnterWhileRaffleIsCalculating() public {
+        // "Calculating" state is happening in performUpkeep() function,
+        // so to perform this function we have to pass some checks, such as, hasPlayers, hasBalance, timeHasPassed
+        // Arrange
+        vm.prank(PLAYER);
+        raffle.enterRaffle{value: entranceFee}();
+        vm.warp(block.timestamp + interval + 1);  //here we passed the interval of raffle to pick the winner
+        vm.roll(block.number + 1);  //
+        raffle.performUpkeep("");
+        // Act/Assert
+        vm.expectRevert();
+        vm.prank(PLAYER);
+        raffle.enterRaffle{value: entranceFee}();
+
     }
 }
