@@ -1,66 +1,73 @@
-## Foundry
+🎰 Raffle Smart Contract
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A decentralized lottery (raffle) smart contract built with Solidity, using Chainlink VRF v2.5 for verifiable randomness and Foundry for testing and deployment.
 
-Foundry consists of:
+📝 Project Overview
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+This project implements a secure and decentralized raffle contract where users can participate by sending ETH. At specified intervals, a random winner is selected automatically using Chainlink VRF to ensure fairness.
 
-## Documentation
+Key features include:
 
-https://book.getfoundry.sh/
+✅ Minimum entrance fee requirement
 
-## Usage
+✅ Storing participants and tracking entries
 
-### Build
+✅ Verifiable randomness using Chainlink VRF v2.5
 
-```shell
-$ forge build
-```
+✅ Automated winner selection
 
-### Test
+✅ Comprehensive unit testing with Foundry
 
-```shell
-$ forge test
-```
 
-### Format
+🛠 Tech Stack
 
-```shell
-$ forge fmt
-```
+Solidity 0.8.19 – Smart contract programming
 
-### Gas Snapshots
+Chainlink VRF v2.5 – Random number generator
 
-```shell
-$ forge snapshot
-```
+Foundry – Smart contract testing & deployment
 
-### Anvil
+EVM Compatible Networks – Sepolia, Goerli, etc.
 
-```shell
-$ anvil
-```
+Forge Std – Testing utilities (vm.prank, vm.deal, vm.hoax)
 
-### Deploy
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
 
-### Cast
+⚡ How it Works
 
-```shell
-$ cast <subcommand>
-```
+Players send ETH via enterRaffle() to participate.
 
-### Help
+The contract keeps track of participants in s_players.
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+After the raffle interval passes, Chainlink VRF is called in performUpkeep() to generate a random number.
+
+A winner is selected using modulo arithmetic:
+
+uint256 indexOfWinner = randomWords[0] % s_players.length;
+
+Winner receives the accumulated ETH, and the raffle resets.
+
+
+
+
+🚀 Deployment
+
+Deploy on any EVM-compatible network:
+
+forge script script/DeployRaffle.s.sol --broadcast --rpc-url <RPC_URL> --private-key <PRIVATE_KEY>
+
+🔧 Cheatcodes in Tests
+
+vm.prank(address) – sets msg.sender for the next call
+
+vm.deal(address, amount) – sets ETH balance
+
+vm.hoax(address, amount) – combines prank + deal
+
+📌 Notes
+
+This contract uses custom errors for gas efficiency.
+
+Events are emitted for all player entries and winner selections.
+
+Chainlink VRF integration ensures fairness and transparency.
