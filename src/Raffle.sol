@@ -69,6 +69,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     // when player enters the raffle
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
+    event RequestedRaffleWinner(uint256 indexed requestId);
 
     /* CONSTRUCTOR */
     constructor(
@@ -127,13 +128,15 @@ contract Raffle is VRFConsumerBaseV2Plus {
         return (upkeepNeeded, "");
     }
 
-    // 3. be automatically called...when there is a time to pick a winner
+    // 3. be automatically called...when there is a time to pick a winner - upkeepNeeded is true then
     function performUpkeep(bytes calldata /*performData*/ ) external {
         (bool upkeepNeeded,) = checkUpkeep("");
+        // here upkeepNeeded is just a variable storin return val of checkUpkeep() func
         // If upkeepNeeded == true → !true == false → if(false) → the revert won’t run. -->  performUpkeep will run
         // If upkeepNeeded == false → !false == true → if(true) → the revert will run. --> performUpkeep won't run
         if (!upkeepNeeded) {
             revert Raffle__UpkeepNotNeeded(address(this).balance, s_players.length, uint256(s_raffleState));
+            // in this revert we includes debugging info
         }
 
         s_raffleState = RaffleState.CALCULATING;
@@ -152,7 +155,8 @@ contract Raffle is VRFConsumerBaseV2Plus {
             )
         });
         IVRFCoordinatorV2Plus coordinator = IVRFCoordinatorV2Plus(address(s_vrfCoordinator));
-        coordinator.requestRandomWords(request);
+        uint256 requestId = coordinator.requestRandomWords(request);
+        emit RequestedRaffleWinner(requestId);
     }
 
     // 2. use a random number to select a player randomly

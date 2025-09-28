@@ -3,6 +3,7 @@ pragma solidity 0.8.19;
 
 import {Script} from "forge-std/Script.sol";
 import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
+import {LinkToken} from "test/mocks/LinkToken.sol";
 
 // Declared abstract because it doesn’t need deployment itself, just provides constants.
 abstract contract CodeConstants{
@@ -27,6 +28,7 @@ contract HelperConfig is CodeConstants, Script {
         bytes32 keyHash;
         uint256 subscriptionId;
         uint32 callbackGasLimit;
+        address link;
     }
 
     // localNetworkConfig - stores config for your Anvil local chain
@@ -40,7 +42,7 @@ contract HelperConfig is CodeConstants, Script {
         networkConfigs[ETH_SEPOLIA_CHAIN_ID] = getSepoliaEthConfig();
     }
 
-    function getConfifByChainId(uint256 chainId) public returns(NetworkConfig memory) { 
+    function getConfigByChainId(uint256 chainId) public returns(NetworkConfig memory) { 
         if (networkConfigs[chainId].vrfCoordinator !=  address(0)) {
             return networkConfigs[chainId];
         } else if (chainId == LOCAL_CHAIN_ID) {
@@ -54,7 +56,7 @@ contract HelperConfig is CodeConstants, Script {
 
     //just a getter function- to know on which chain contract is deployed 
     function getConfig() public returns(NetworkConfig memory) {
-        return getConfifByChainId(block.chainid);
+        return getConfigByChainId(block.chainid);
     }
 
     // deploying on sepolia chain
@@ -62,10 +64,11 @@ contract HelperConfig is CodeConstants, Script {
         return NetworkConfig({
             entranceFee: 0.01 ether, //1e16
             interval:30, //30 sec
-            vrfCoordinator: 0x8103B0A8A00be2DDC778e6e7eaa21791Cd364625,
-            keyHash: 0x474e34a077df58807dbe9c96e02e3f8f07c3c7d7b3e1a37e2319d0c7d6c12d6b,
+            vrfCoordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B,
+            keyHash: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
             callbackGasLimit: 500000,
-            subscriptionId: 0 //have to fix this
+            subscriptionId: 0, //have to fix this
+            link: 0x779877A7B0D9E8603169DdbD7836e478b4624789
         });
     }
 
@@ -79,6 +82,7 @@ contract HelperConfig is CodeConstants, Script {
         // deploy mock vrf and key settings
         vm.startBroadcast();
         VRFCoordinatorV2_5Mock vrfCoordinatorV2_5Mock = new VRFCoordinatorV2_5Mock(MOCK_BASE_FEE, MOCK_GAS_PRICE_LINK, MOCK_WEI_PER_UNIT_LINK);
+        LinkToken linkToken = new LinkToken();
         vm.stopBroadcast();
 
         localNetworkConfig = NetworkConfig({
@@ -88,7 +92,8 @@ contract HelperConfig is CodeConstants, Script {
             // keyHash/gasLane doesn't matter because it's just a mock man
             keyHash: 0x474e34a077df58807dbe9c96e02e3f8f07c3c7d7b3e1a37e2319d0c7d6c12d6b,
             callbackGasLimit: 500000,
-            subscriptionId: 0 //might have to fix this
+            subscriptionId: 0,//might have to fix this
+            link: address(linkToken)
         });
         return localNetworkConfig;
     }

@@ -7,7 +7,16 @@ libs = ["lib"]
 
 remappings = [
   '@chainlink/contracts/=lib/chainlink-brownie-contracts/contracts/',
-  
+  '@solmate=lib/solmate/src',
 ]
-[fmt]
-ignore = ["script/*"]
+
+fs_permissions = [
+    { access = "read", path = "./broadcast" },
+    { access = "read", path = "./reports" },
+]
+
+[Fuzz]
+runs = 512
+
+# [fmt]
+# ignore = ["script/*"]
