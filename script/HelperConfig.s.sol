@@ -6,22 +6,21 @@ import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VR
 import {LinkToken} from "test/mocks/LinkToken.sol";
 
 // Declared abstract because it doesn’t need deployment itself, just provides constants.
-abstract contract CodeConstants{
+abstract contract CodeConstants {
     /*VRF MOCK values */
     uint96 public MOCK_BASE_FEE = 0.25 ether;
     uint96 public MOCK_GAS_PRICE_LINK = 1e9;
-    int256 public MOCK_WEI_PER_UNIT_LINK = 4e15; 
+    int256 public MOCK_WEI_PER_UNIT_LINK = 4e15;
 
     uint256 public constant ETH_SEPOLIA_CHAIN_ID = 11155111;
     uint256 public constant LOCAL_CHAIN_ID = 31337; //anvil chainID
 }
 
 contract HelperConfig is CodeConstants, Script {
-    
     error HelperConfig__InvalidChainId();
 
     // key settings needed for Raffle.
-    struct NetworkConfig{
+    struct NetworkConfig {
         uint256 entranceFee;
         uint256 interval;
         address vrfCoordinator;
@@ -33,7 +32,7 @@ contract HelperConfig is CodeConstants, Script {
 
     // localNetworkConfig - stores config for your Anvil local chain
     NetworkConfig public localNetworkConfig;
-    
+
     // networkConfigs - store config for testnests like sepolia chain
     mapping(uint256 chainId => NetworkConfig) public networkConfigs;
 
@@ -42,28 +41,27 @@ contract HelperConfig is CodeConstants, Script {
         networkConfigs[ETH_SEPOLIA_CHAIN_ID] = getSepoliaEthConfig();
     }
 
-    function getConfigByChainId(uint256 chainId) public returns(NetworkConfig memory) { 
-        if (networkConfigs[chainId].vrfCoordinator !=  address(0)) {
+    function getConfigByChainId(uint256 chainId) public returns (NetworkConfig memory) {
+        if (networkConfigs[chainId].vrfCoordinator != address(0)) {
             return networkConfigs[chainId];
         } else if (chainId == LOCAL_CHAIN_ID) {
             // it will deploy on local anvil chain
             return getOrCreateAnvilEthConfig();
-        }
-        else {
+        } else {
             revert HelperConfig__InvalidChainId();
         }
     }
 
-    //just a getter function- to know on which chain contract is deployed 
-    function getConfig() public returns(NetworkConfig memory) {
+    //just a getter function- to know on which chain contract is deployed
+    function getConfig() public returns (NetworkConfig memory) {
         return getConfigByChainId(block.chainid);
     }
 
     // deploying on sepolia chain
-    function getSepoliaEthConfig() public pure returns(NetworkConfig memory) {
+    function getSepoliaEthConfig() public pure returns (NetworkConfig memory) {
         return NetworkConfig({
             entranceFee: 0.01 ether, //1e16
-            interval:30, //30 sec
+            interval: 30, //30 sec
             vrfCoordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B,
             keyHash: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
             callbackGasLimit: 500000,
@@ -73,26 +71,27 @@ contract HelperConfig is CodeConstants, Script {
     }
 
     // deploying on anvil chain (anvil requires mock config)
-    function getOrCreateAnvilEthConfig() public returns(NetworkConfig memory) {
+    function getOrCreateAnvilEthConfig() public returns (NetworkConfig memory) {
         // check to see if we set an active network config
-        if(localNetworkConfig.vrfCoordinator != address(0)) {
+        if (localNetworkConfig.vrfCoordinator != address(0)) {
             return localNetworkConfig;
         }
 
         // deploy mock vrf and key settings
         vm.startBroadcast();
-        VRFCoordinatorV2_5Mock vrfCoordinatorV2_5Mock = new VRFCoordinatorV2_5Mock(MOCK_BASE_FEE, MOCK_GAS_PRICE_LINK, MOCK_WEI_PER_UNIT_LINK);
+        VRFCoordinatorV2_5Mock vrfCoordinatorV2_5Mock =
+            new VRFCoordinatorV2_5Mock(MOCK_BASE_FEE, MOCK_GAS_PRICE_LINK, MOCK_WEI_PER_UNIT_LINK);
         LinkToken linkToken = new LinkToken();
         vm.stopBroadcast();
 
         localNetworkConfig = NetworkConfig({
             entranceFee: 0.01 ether, //1e16
-            interval:30, //30 sec
+            interval: 30, //30 sec
             vrfCoordinator: address(vrfCoordinatorV2_5Mock),
             // keyHash/gasLane doesn't matter because it's just a mock man
             keyHash: 0x474e34a077df58807dbe9c96e02e3f8f07c3c7d7b3e1a37e2319d0c7d6c12d6b,
             callbackGasLimit: 500000,
-            subscriptionId: 0,//might have to fix this
+            subscriptionId: 0, //might have to fix this
             link: address(linkToken)
         });
         return localNetworkConfig;
