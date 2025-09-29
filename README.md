@@ -20,6 +20,7 @@ Key features include:
 
 ✅ Comprehensive unit testing with Foundry
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 🛠 Tech Stack
 
@@ -33,7 +34,7 @@ EVM Compatible Networks – Sepolia, Goerli, etc.
 
 Forge Std – Testing utilities (vm.prank, vm.deal, vm.hoax)
 
-
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ⚡ How it Works
 
@@ -49,8 +50,7 @@ uint256 indexOfWinner = randomWords[0] % s_players.length;
 
 Winner receives the accumulated ETH, and the raffle resets.
 
-
-
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 🚀 Deployment
 
@@ -66,6 +66,8 @@ vm.deal(address, amount) – sets ETH balance
 
 vm.hoax(address, amount) – combines prank + deal
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 📌 Notes
 
 This contract uses custom errors for gas efficiency.
@@ -73,3 +75,9 @@ This contract uses custom errors for gas efficiency.
 Events are emitted for all player entries and winner selections.
 
 Chainlink VRF integration ensures fairness and transparency.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+🧑‍💻 Author
+Avishkar Chavan
+📌 Web3 Developer | Smart Contract Engineer
