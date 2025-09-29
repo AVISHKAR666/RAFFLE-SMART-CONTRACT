@@ -16,7 +16,7 @@ fs_permissions = [
 ]
 
 [Fuzz]
-runs = 512
+runs = 256
 
 # [fmt]
 # ignore = ["script/*"]

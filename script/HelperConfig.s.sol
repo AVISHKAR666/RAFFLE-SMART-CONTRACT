@@ -28,6 +28,7 @@ contract HelperConfig is CodeConstants, Script {
         uint256 subscriptionId;
         uint32 callbackGasLimit;
         address link;
+        address account;
     }
 
     // localNetworkConfig - stores config for your Anvil local chain
@@ -66,7 +67,8 @@ contract HelperConfig is CodeConstants, Script {
             keyHash: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
             callbackGasLimit: 500000,
             subscriptionId: 0, //have to fix this
-            link: 0x779877A7B0D9E8603169DdbD7836e478b4624789
+            link: 0x779877A7B0D9E8603169DdbD7836e478b4624789,
+            account: 0x1f09379B3231e6748bF2b1CBC4B88Fc53c1fC2F6
         });
     }
 
@@ -92,7 +94,8 @@ contract HelperConfig is CodeConstants, Script {
             keyHash: 0x474e34a077df58807dbe9c96e02e3f8f07c3c7d7b3e1a37e2319d0c7d6c12d6b,
             callbackGasLimit: 500000,
             subscriptionId: 0, //might have to fix this
-            link: address(linkToken)
+            link: address(linkToken),
+            account: 0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38
         });
         return localNetworkConfig;
     }
