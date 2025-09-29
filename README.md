@@ -2,6 +2,8 @@
 
 A decentralized lottery (raffle) smart contract built with Solidity, using Chainlink VRF v2.5 for verifiable randomness and Foundry for testing and deployment.
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 📝 Project Overview
 
 This project implements a secure and decentralized raffle contract where users can participate by sending ETH. At specified intervals, a random winner is selected automatically using Chainlink VRF to ensure fairness.
