@@ -1,5 +1,8 @@
 🎲**Decentralized Raffle Smart Contract — Sepolia (Foundry + Chainlink VRF v2.5)** 
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 Solidity License: MIT
 
 This repository contains the smart contract for a decentralized raffle (lottery), developed as part of my Web3 learning journey using Foundry and Chainlink VRF v2.5. The project demonstrates practical smart contract development skills, provably fair randomness, and automated upkeep through Chainlink.
@@ -108,6 +111,13 @@ Contract must be added to VRF subscription as a consumer.
 
 Tests may revert without proper environment setup.
 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+📄 License
+
+This project is licensed under the MIT License. 
+ 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 🙌 Credits
