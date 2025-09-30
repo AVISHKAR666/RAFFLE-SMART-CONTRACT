@@ -1,4 +1,4 @@
-🎲 #Decentralized Raffle Smart Contract — Sepolia (Foundry + Chainlink VRF v2.5)
+🎲**Decentralized Raffle Smart Contract — Sepolia (Foundry + Chainlink VRF v2.5)** 
 
 Solidity License: MIT
 
@@ -6,7 +6,7 @@ This repository contains the smart contract for a decentralized raffle (lottery)
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-###🚀 Project Overview
+🚀 Project Overview
 
 This project implements a fully decentralized raffle system on the Sepolia testnet.
 
