@@ -1,4 +1,4 @@
-#🎲 Decentralized Raffle Smart Contract — Sepolia (Foundry + Chainlink VRF v2.5)
+🎲 # Decentralized Raffle Smart Contract — Sepolia (Foundry + Chainlink VRF v2.5)
 
 Solidity License: MIT
 
